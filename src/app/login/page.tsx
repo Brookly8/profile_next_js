@@ -49,7 +49,6 @@ export default function Login() {
       setLoading(false);
     }
   };
-  console.log(signUpMessage);
 
   return (
     <div className="flex items-center justify-center min-h-screen py-2">
@@ -57,10 +56,8 @@ export default function Login() {
         onSubmit={sumbitHandler}
         className="flex flex-col items-center justify-center gap-3 bg-purple-400 w-[20%]! p-3 rounded-lg  sm:w-1/2 lg:w-1/3 w-full"
       >
-          {loading && <p>"loading..."</p>}
-        <p>
-          {signUpMessage && signUpMessage}
-        </p>
+        {loading && <p>"loading..."</p>}
+        <p>{signUpMessage && signUpMessage}</p>
         <h1 className="text-black text-3xl">Login</h1>
 
         <label className="text-black" htmlFor="email">
