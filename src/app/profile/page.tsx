@@ -19,7 +19,7 @@ export default function Profile() {
       }
     };
     getUserDetails();
-  });
+  }, []);
 
   const logOut = async () => {
     try {

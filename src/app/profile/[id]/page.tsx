@@ -21,7 +21,7 @@ export default function UserProfile() {
       }
     };
     getUserDetails();
-  });
+  }, []);
 
   const logOut = async () => {
     try {

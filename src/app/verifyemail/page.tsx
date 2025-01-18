@@ -27,7 +27,7 @@ export default function VerifyEmail() {
     } else {
       setToken("");
     }
-  });
+  }, []);
 
   useEffect(() => {
     if (token.length > 0) {
