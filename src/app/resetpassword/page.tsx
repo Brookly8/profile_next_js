@@ -3,7 +3,7 @@ import axios from "axios";
 import Link from "next/link";
 import React, { useState } from "react";
 
-export default function resetPassword() {
+export default function ResetPassword() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(false);

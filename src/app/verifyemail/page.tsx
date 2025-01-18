@@ -1,10 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-export default function page() {
+export default function VerifyEmail() {
   const [token, setToken] = useState<string>("");
   const router = useRouter();
 
