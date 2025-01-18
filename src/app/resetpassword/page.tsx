@@ -9,7 +9,7 @@ export default function ResetPassword() {
   const [message, setMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const sendResetRequest = async (e: any) => {
+  const sendResetRequest = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       setLoading(true);
@@ -19,9 +19,11 @@ export default function ResetPassword() {
       });
       console.log("Reset link was sanded successfully", data);
       setMessage(true);
-    } catch (error: any) {
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.log(error.message);
+      }
       setErrorMessage("provided email dosnt exists");
-      console.log(error.message);
     } finally {
       setLoading(false);
     }

@@ -10,8 +10,10 @@ export default function VerifyEmail() {
   const verifyUserEmail = async () => {
     try {
       await axios.post("/api/users/verifyemail", { token });
-    } catch (error: any) {
-      console.log(error.response.data);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.log(error.message);
+      }
     }
   };
 

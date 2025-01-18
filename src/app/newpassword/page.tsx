@@ -22,7 +22,7 @@ export default function NewPasswordPage() {
     }
   }, []);
 
-  const changePassword = async (e: any) => {
+  const changePassword = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (newPassword.password === newPassword.password2 && token.length > 0) {
       try {
@@ -36,8 +36,10 @@ export default function NewPasswordPage() {
           JSON.stringify({ message: "your password successfully changed" })
         );
         router.push("/login");
-      } catch (error: any) {
-        console.log(error.message);
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.log(error.message);
+        }
       } finally {
         setLoading(false);
       }

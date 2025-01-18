@@ -13,9 +13,11 @@ export default function Profile() {
         const { data } = await axios("/api/users/currentuser");
         console.log(data);
         router.push(`/profile/${data.data._id}`);
-      } catch (error: any) {
-        console.log(error.message);
-        logOut();
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.log(error.message);
+          toast.error(error.message);
+        }
       }
     };
     getUserDetails();
@@ -25,9 +27,11 @@ export default function Profile() {
     try {
       await axios("./api/users/logout");
       router.push("/login");
-    } catch (error: any) {
-      console.log(error.message);
-      toast.error(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.log(error.message);
+        toast.error(error.message);
+      }
     }
   };
 

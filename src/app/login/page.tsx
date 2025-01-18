@@ -34,7 +34,7 @@ export default function Login() {
     setNewPasswordMessage(message2?.message);
   }, []);
 
-  const sumbitHandler = async (e: any) => {
+  const sumbitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
@@ -50,10 +50,12 @@ export default function Login() {
       );
 
       router.push("/profile");
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+        console.log("SignUp failed", error.message);
+      }
       setLoginFailed("user with provided email or password not exists");
-      console.log("SignUp failed", error.message);
     } finally {
       setLoading(false);
     }

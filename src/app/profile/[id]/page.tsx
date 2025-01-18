@@ -5,7 +5,9 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 export default function UserProfile() {
-  const [userData, setUserData] = useState<any>("");
+  const [userData, setUserData] = useState({
+    username: "",
+  });
   const router = useRouter();
 
   useEffect(() => {
@@ -14,8 +16,11 @@ export default function UserProfile() {
         const { data } = await axios("/api/users/currentuser");
         setUserData(data.data);
         router.push(`/profile/${data.data._id}`);
-      } catch (error: any) {
-        console.log(error.message);
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.log(error.message);
+          toast.error(error.message);
+        }
 
         router.push("/login");
       }
@@ -27,9 +32,11 @@ export default function UserProfile() {
     try {
       await axios("../api/users/logout");
       router.push("/login");
-    } catch (error: any) {
-      console.log(error.message);
-      toast.error(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.log(error.message);
+        toast.error(error.message);
+      }
     }
   };
 

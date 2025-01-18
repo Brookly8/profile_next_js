@@ -15,7 +15,7 @@ export default function SignUp() {
     password: "",
   });
 
-  const onSignUp = async (e: any) => {
+  const onSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       setLoading(true);
@@ -28,10 +28,12 @@ export default function SignUp() {
       );
 
       router.push("/login");
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+        console.log("SignUp failed", error.message);
+      }
 
-      console.log("SignUp failed", error.message);
     } finally {
       setLoading(false);
     }
