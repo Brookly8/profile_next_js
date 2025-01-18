@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-export default function UserProfile({ params }: any) {
+export default function UserProfile() {
   const [userData, setUserData] = useState<any>("");
   const router = useRouter();
 
@@ -14,12 +14,14 @@ export default function UserProfile({ params }: any) {
         const { data } = await axios("/api/users/currentuser");
         setUserData(data.data);
         router.push(`/profile/${data.data._id}`);
-      } catch (error) {
+      } catch (error: any) {
+        console.log(error.message);
+
         router.push("/login");
       }
     };
     getUserDetails();
-  }, []);
+  });
 
   const logOut = async () => {
     try {

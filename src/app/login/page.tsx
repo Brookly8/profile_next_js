@@ -65,7 +65,7 @@ export default function Login() {
         onSubmit={sumbitHandler}
         className="flex flex-col items-center justify-center gap-3 bg-purple-400 w-[20%]! p-3 rounded-lg  sm:w-1/2 lg:w-1/3 w-full"
       >
-        {loading && <p>"loading..."</p>}
+        {loading && <p>loading...</p>}
         <p>{signUpMessage && signUpMessage}</p>
         {newPasswordMessage && <p>{newPasswordMessage}</p>}
         <h1 className="text-black text-3xl">Login</h1>
@@ -104,7 +104,7 @@ export default function Login() {
         </button>
         <p className="text-red-800">{loginFailed}</p>
         <div className="text-black">
-          Don't have an account?{" "}
+          Dont have an account?{" "}
           <Link href="./signup" className="text-purple-200 hover:underline">
             signUp
           </Link>

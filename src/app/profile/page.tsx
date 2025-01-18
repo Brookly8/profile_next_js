@@ -1,7 +1,6 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
-import Link from "next/link";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
@@ -20,7 +19,7 @@ export default function Profile() {
       }
     };
     getUserDetails();
-  }, []);
+  });
 
   const logOut = async () => {
     try {
