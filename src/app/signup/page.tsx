@@ -24,7 +24,7 @@ export default function SignUp() {
       console.log("signup success", data);
       localStorage.setItem(
         "signUpSuccess",
-        JSON.stringify({ message: "signUp success, now you can Log In" })
+        JSON.stringify({ message: "check your email to compleate sign in" })
       );
 
       router.push("/login");

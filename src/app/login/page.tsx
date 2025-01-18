@@ -9,6 +9,7 @@ export default function Login() {
   const router = useRouter();
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [signUpMessage, setSignUpMessage] = useState("");
+  const [newPasswordMessage, setNewPasswordMessage] = useState("");
   const [loginFailed, setLoginFailed] = useState("");
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState({
@@ -27,6 +28,10 @@ export default function Login() {
   useEffect(() => {
     const message = JSON.parse(localStorage.getItem("signUpSuccess")!);
     setSignUpMessage(message?.message);
+    const message2 = JSON.parse(
+      localStorage.getItem("newPasswordSuccessMessage")!
+    );
+    setNewPasswordMessage(message2?.message);
   }, []);
 
   const sumbitHandler = async (e: any) => {
@@ -39,6 +44,10 @@ export default function Login() {
       console.log("signup success", data);
       toast.success("Login success");
       localStorage.setItem("signUpSuccess", JSON.stringify({ message: "" }));
+      localStorage.setItem(
+        "newPasswordSuccessMessage",
+        JSON.stringify({ message: "" })
+      );
 
       router.push("/profile");
     } catch (error: any) {
@@ -58,6 +67,7 @@ export default function Login() {
       >
         {loading && <p>"loading..."</p>}
         <p>{signUpMessage && signUpMessage}</p>
+        {newPasswordMessage && <p>{newPasswordMessage}</p>}
         <h1 className="text-black text-3xl">Login</h1>
 
         <label className="text-black" htmlFor="email">
@@ -93,10 +103,21 @@ export default function Login() {
           Submit
         </button>
         <p className="text-red-800">{loginFailed}</p>
-        <Link className="text-black" href="./signup">
+        <div className="text-black">
           Don't have an account?{" "}
-          <span className="text-purple-200 hover:underline">signUp</span>
-        </Link>
+          <Link href="./signup" className="text-purple-200 hover:underline">
+            signUp
+          </Link>
+        </div>
+        <div className="text-black">
+          Forgot password?{" "}
+          <Link
+            href="./resetpassword"
+            className="text-purple-200 hover:underline"
+          >
+            Reset password
+          </Link>
+        </div>
       </form>
     </div>
   );

@@ -10,10 +10,13 @@ export default function UserProfile({ params }: any) {
 
   useEffect(() => {
     const getUserDetails = async () => {
-      const { data } = await axios("/api/users/currentuser");
-      console.log(data);
-      setUserData(data.data);
-      router.push(`/profile/${data.data._id}`);
+      try {
+        const { data } = await axios("/api/users/currentuser");
+        setUserData(data.data);
+        router.push(`/profile/${data.data._id}`);
+      } catch (error) {
+        router.push("/login");
+      }
     };
     getUserDetails();
   }, []);

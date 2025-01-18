@@ -10,9 +10,14 @@ export default function Profile() {
 
   useEffect(() => {
     const getUserDetails = async () => {
-      const { data } = await axios("/api/users/currentuser");
-      console.log(data);
-      router.push(`/profile/${data.data._id}`);
+      try {
+        const { data } = await axios("/api/users/currentuser");
+        console.log(data);
+        router.push(`/profile/${data.data._id}`);
+      } catch (error: any) {
+        console.log(error.message);
+        logOut();
+      }
     };
     getUserDetails();
   }, []);
