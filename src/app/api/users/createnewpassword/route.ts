@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
       { message: "password changed succesessfully" },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error: any | unknown) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
