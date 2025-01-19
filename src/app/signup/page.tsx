@@ -1,5 +1,6 @@
 "use client";
 import axios from "axios";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -33,7 +34,6 @@ export default function SignUp() {
         toast.error(error.message);
         console.log("SignUp failed", error.message);
       }
-
     } finally {
       setLoading(false);
     }
@@ -52,10 +52,20 @@ export default function SignUp() {
   }, [user]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen py-2">
+    <div className="flex flex-col gap-10 items-center justify-center min-h-screen py-2">
+      <Link href="/">
+        <Image
+          className="dark:invert flex"
+          src="/next.svg"
+          alt="Next.js logo"
+          width={360}
+          height={76}
+          priority
+        />
+      </Link>
       <form
         onSubmit={onSignUp}
-        className="flex flex-col items-center justify-center gap-3 bg-purple-400 w-[20%]! p-3 rounded-lg  sm:w-1/2 lg:w-1/3 w-full"
+        className="flex flex-col items-center justify-center gap-3 bg-slate-100 w-[20%]! p-3 rounded-lg  sm:w-1/2 lg:w-1/3 w-full"
       >
         <p className="text-black">{loading && "loading..."}</p>
         <h1 className="text-black text-3xl">SignUp</h1>
@@ -64,7 +74,7 @@ export default function SignUp() {
         </label>
         <input
           id="username"
-          className="text-black rounded-lg p-2"
+          className="bg-black rounded-lg p-2"
           value={user.username}
           onChange={(e) => setUser({ ...user, username: e.target.value })}
           type="text"
@@ -77,7 +87,7 @@ export default function SignUp() {
           id="password"
           value={user.password}
           onChange={(e) => setUser({ ...user, password: e.target.value })}
-          className="text-black rounded-lg p-2"
+          className="bg-black rounded-lg p-2"
           type="password"
           placeholder="password"
         />
@@ -88,7 +98,7 @@ export default function SignUp() {
           id="email"
           value={user.email}
           onChange={(e) => setUser({ ...user, email: e.target.value })}
-          className="text-black rounded-lg p-2"
+          className="bg-black rounded-lg p-2"
           type="email"
           placeholder="email"
         />
@@ -96,15 +106,15 @@ export default function SignUp() {
           type="submit"
           className={
             buttonDisabled
-              ? "bg-purple-300 pt-1 pb-1 pr-3 pl-3 rounded-lg text-white"
-              : "bg-purple-600 pt-1 pb-1 pr-3 pl-3 hover:bg-purple-500 rounded-lg text-white"
+              ? "border border-black pt-1 pb-1 pr-3 pl-3 rounded-lg text-black"
+              : "border border-black pt-1 pb-1 pr-3 pl-3 rounded-lg bg-black"
           }
         >
           Submit
         </button>
         <Link className="text-black" href="./login">
           have an account?{" "}
-          <span className="text-purple-200 hover:underline">Login</span>
+          <span className="text-yellow-600 hover:underline">Login</span>
         </Link>
       </form>
     </div>

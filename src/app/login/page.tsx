@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import Image from "next/image";
 
 export default function Login() {
   const router = useRouter();
@@ -62,14 +63,24 @@ export default function Login() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen py-2">
+    <div className="flex flex-col gap-10 items-center justify-center min-h-screen py-2">
+      <Link href="/">
+        <Image
+          className="dark:invert flex"
+          src="/next.svg"
+          alt="Next.js logo"
+          width={360}
+          height={76}
+          priority
+        />
+      </Link>
       <form
         onSubmit={sumbitHandler}
-        className="flex flex-col items-center justify-center gap-3 bg-purple-400 w-[20%]! p-3 rounded-lg  sm:w-1/2 lg:w-1/3 w-full"
+        className="flex flex-col items-center justify-center gap-3 bg-slate-100 w-[20%]! p-3 rounded-lg  sm:w-1/2 lg:w-1/3 w-full"
       >
         {loading && <p>loading...</p>}
-        <p>{signUpMessage && signUpMessage}</p>
-        {newPasswordMessage && <p>{newPasswordMessage}</p>}
+        <p className="text-black">{signUpMessage && signUpMessage}</p>
+        {newPasswordMessage && <p className="text-black">{newPasswordMessage}</p>}
         <h1 className="text-black text-3xl">Login</h1>
 
         <label className="text-black" htmlFor="email">
@@ -79,7 +90,7 @@ export default function Login() {
           id="email"
           value={user.email}
           onChange={(e) => setUser({ ...user, email: e.target.value })}
-          className="text-black rounded-lg p-2"
+          className=" bg-black rounded-lg p-2"
           type="email"
           placeholder="email"
         />
@@ -90,7 +101,7 @@ export default function Login() {
           id="password"
           value={user.password}
           onChange={(e) => setUser({ ...user, password: e.target.value })}
-          className="text-black rounded-lg p-2"
+          className=" bg-black rounded-lg p-2"
           type="password"
           placeholder="password"
         />
@@ -98,8 +109,8 @@ export default function Login() {
           type="submit"
           className={
             buttonDisabled
-              ? "bg-purple-300 pt-1 pb-1 pr-3 pl-3 rounded-lg text-white"
-              : "bg-purple-600 pt-1 pb-1 pr-3 pl-3 hover:bg-purple-500 rounded-lg text-white"
+              ? "border border-black pt-1 pb-1 pr-3 pl-3 rounded-lg text-black"
+              : "border border-black pt-1 pb-1 pr-3 pl-3 rounded-lg bg-black"
           }
         >
           Submit
@@ -107,7 +118,7 @@ export default function Login() {
         <p className="text-red-800">{loginFailed}</p>
         <div className="text-black">
           Dont have an account?{" "}
-          <Link href="./signup" className="text-purple-200 hover:underline">
+          <Link href="./signup" className="text-yellow-600 hover:underline">
             signUp
           </Link>
         </div>
@@ -115,7 +126,7 @@ export default function Login() {
           Forgot password?{" "}
           <Link
             href="./resetpassword"
-            className="text-purple-200 hover:underline"
+            className="text-yellow-600 hover:underline"
           >
             Reset password
           </Link>
