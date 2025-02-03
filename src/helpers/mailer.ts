@@ -37,8 +37,19 @@ export const sendMail = async ({
       },
     });
 
+    const transport2 = nodemailer.createTransport({
+      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.EMAILUSER2,
+        pass: process.env.EMAILPASSWORD2,
+      },
+    });
+
     const mailOptions = {
-      from: "me",
+      from: "NEXT.JS <jurabartkiv@gmail.com>",
       to: email,
       subject:
         emailType === "VERIFY" ? "Verify your email" : "Reset your password",
@@ -49,7 +60,7 @@ export const sendMail = async ({
       }</p>`,
     };
 
-    const mailResponse = await transport.sendMail(mailOptions);
+    const mailResponse = await transport2.sendMail(mailOptions);
 
     return mailResponse;
   } catch (error: unknown) {

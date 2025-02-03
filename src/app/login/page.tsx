@@ -78,9 +78,11 @@ export default function Login() {
         onSubmit={sumbitHandler}
         className="flex flex-col items-center justify-center gap-3 bg-slate-100 w-[20%]! p-3 rounded-lg  sm:w-1/2 lg:w-1/3 w-full"
       >
-        {loading && <p>loading...</p>}
+        {loading && <p className="text-black">loading...</p>}
         <p className="text-black">{signUpMessage && signUpMessage}</p>
-        {newPasswordMessage && <p className="text-black">{newPasswordMessage}</p>}
+        {newPasswordMessage && (
+          <p className="text-black">{newPasswordMessage}</p>
+        )}
         <h1 className="text-black text-3xl">Login</h1>
 
         <label className="text-black" htmlFor="email">
@@ -90,7 +92,7 @@ export default function Login() {
           id="email"
           value={user.email}
           onChange={(e) => setUser({ ...user, email: e.target.value })}
-          className=" bg-black rounded-lg p-2"
+          className=" bg-black rounded-lg p-2 autofill:bg-black autofill:text-white"
           type="email"
           placeholder="email"
         />

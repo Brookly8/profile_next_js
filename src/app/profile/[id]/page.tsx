@@ -5,10 +5,44 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 export default function UserProfile() {
+  const router = useRouter();
   const [userData, setUserData] = useState({
     username: "",
   });
-  const router = useRouter();
+  const [allJobs, setAllJobs] = useState([]);
+  const [job, setJob] = useState({
+    title: "",
+    salary: "",
+    type: "",
+  });
+  const [inputField, setInputField] = useState(false);
+
+  const getJobsDetails = async () => {
+    try {
+      const { data } = await axios("/api/users/alljobs");
+      setAllJobs(data.jobs);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.log(error.message);
+        toast.error(error.message);
+      }
+    }
+  };
+
+  const addJob = async () => {
+    try {
+      const { data } = await axios.post("/api/users/job", job);
+      console.log("signup success", data);
+      setJob({ title: "", salary: "", type: "" });
+      setInputField((prev) => !prev);
+      getJobsDetails();
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.log(error.message);
+        toast.error(error.message);
+      }
+    }
+  };
 
   useEffect(() => {
     const getUserDetails = async () => {
@@ -25,6 +59,8 @@ export default function UserProfile() {
         router.push("/login");
       }
     };
+
+    getJobsDetails();
     getUserDetails();
   }, []);
 
@@ -41,14 +77,101 @@ export default function UserProfile() {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center  min-h-screen">
-      Welcome Back {userData.username}
-      <button
-        className="bg-purple-400 pl-4 pr-4 pt-2 pb-2 mt-7 rounded-sm hover:bg-purple-300"
-        onClick={logOut}
+    <div className="min-h-screen">
+      <div className="flex bg-slate-800 p-4 rounded-lg mb-5 items-center">
+        <div className="flex gap-4 items-center w-[100%] justify-between">
+          <p>
+            Welcome Back{" "}
+            <span className="bg-orange-400 pt-2 pb-2 pr-3 pl-3 rounded-lg text-black">
+              {userData.username}
+            </span>
+          </p>
+          <button
+            onClick={() => setInputField((prev) => !prev)}
+            className="border bg-white border-white pt-1 pb-1 pr-3 pl-3 rounded-lg text-black"
+          >
+            Add Job
+          </button>
+          <button
+            className="border bg-white border-white pt-1 pb-1 pr-3 pl-3 rounded-lg text-black"
+            onClick={logOut}
+          >
+            LogOut
+          </button>
+        </div>
+      </div>
+      <div
+        className={`bg-slate-300 rounded-md flex-col p-4 gap-8 ${
+          inputField ? "flex absolute w-[60%] left-[20%] top-[30%]" : "hidden"
+        }`}
       >
-        LogOut
-      </button>
+        <div className="flex flex-col items-center">
+          <span className="text-black">Job Title:</span>
+          <input
+            onChange={(e) => setJob({ ...job, title: e.target.value })}
+            className="text-black rounded-md w-[60%]"
+            type="text"
+          />
+        </div>
+        <div className="flex flex-col items-center">
+          <span className="text-black">Salary:</span>
+          <input
+            onChange={(e) => setJob({ ...job, salary: e.target.value })}
+            className="text-black rounded-md w-[60%]"
+            type="text"
+          />
+        </div>
+        <div className="flex flex-col items-center">
+          <span className="text-black">Type:</span>
+          <input
+            onChange={(e) => setJob({ ...job, type: e.target.value })}
+            className="text-black rounded-md w-[60%]"
+            type="text"
+          />
+        </div>
+        <div className="flex justify-center">
+          <button
+            onClick={addJob}
+            className=" bg-black border-white pt-1 pb-1 pr-3 pl-3 rounded-lg text-white w-[20%]"
+          >
+            Submit
+          </button>
+        </div>
+      </div>
+      <div className="flex justify-around gap-2 mb-5 mt-5">
+        <div className=" w-[30%] flex justify-center text-xl">
+          Title/Company Name
+        </div>
+        <div className=" w-[30%] flex justify-center text-xl">salary</div>
+        <div className=" w-[30%] flex justify-center text-xl">Type</div>
+        <div className=" w-[30%] flex justify-center text-xl">Time</div>
+      </div>
+
+      {allJobs.map(
+        (
+          job: { title: string; salary: string; type: string; date: Date },
+          index
+        ) => {
+          return (
+            <div key={index} className="flex justify-around gap-2 mb-3">
+              <div className="bg-white p-1 text-black flex justify-center w-[30%] rounded-md">
+                {job.title}
+              </div>
+              <div className="bg-white p-1 text-black flex justify-center w-[30%] rounded-md">
+                {job.salary}
+              </div>
+              <div className="bg-white p-1 text-black flex justify-center w-[30%] rounded-md">
+                {job.type}
+              </div>
+              <div className="bg-white p-1 text-black flex justify-center w-[30%] rounded-md">
+                {`${job.date.toString().slice(0, 10)} ${job.date
+                  .toString()
+                  .slice(13, 19)}`}
+              </div>
+            </div>
+          );
+        }
+      )}
     </div>
   );
 }

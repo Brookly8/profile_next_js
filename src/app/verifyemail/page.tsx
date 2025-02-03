@@ -41,7 +41,7 @@ export default function VerifyEmail() {
       <h1>Your email was successfully confirmed</h1>
       <button
         onClick={submitHandler}
-        className="p-4 rounded-sm bg-purple-400 text-black"
+        className="p-4 rounded-sm bg-white text-black"
       >
         Login
       </button>
