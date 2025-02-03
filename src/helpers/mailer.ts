@@ -29,22 +29,13 @@ export const sendMail = async ({
     }
 
     const transport = nodemailer.createTransport({
-      host: "sandbox.smtp.mailtrap.io",
-      port: 2525,
-      auth: {
-        user: process.env.EMAILUSER,
-        pass: process.env.EMAILPASSWORD,
-      },
-    });
-
-    const transport2 = nodemailer.createTransport({
       service: "gmail",
       host: "smtp.gmail.com",
       port: 587,
       secure: false,
       auth: {
-        user: process.env.EMAILUSER2,
-        pass: process.env.EMAILPASSWORD2,
+        user: process.env.EMAILUSER,
+        pass: process.env.EMAILPASSWORD,
       },
     });
 
@@ -60,7 +51,7 @@ export const sendMail = async ({
       }</p>`,
     };
 
-    const mailResponse = await transport2.sendMail(mailOptions);
+    const mailResponse = await transport.sendMail(mailOptions);
 
     return mailResponse;
   } catch (error: unknown) {

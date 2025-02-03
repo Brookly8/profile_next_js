@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import job from "@/models/jobsModel";
 import { connect } from "@/dbConfig/dbConfig";
 
 connect();
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const allJobs = await job.find();
 
