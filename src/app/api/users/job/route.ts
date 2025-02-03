@@ -6,13 +6,14 @@ connect();
 
 export async function POST(request: NextRequest) {
   const reqBody = await request.json();
-  const { title, salary, type } = reqBody;
+  const { title, salary, type, date } = reqBody;
   console.log(reqBody);
 
   const newJob = new job({
     title,
     salary,
     type,
+    date,
   });
 
   const savedJob = await newJob.save();

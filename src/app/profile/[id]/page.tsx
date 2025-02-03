@@ -10,10 +10,16 @@ export default function UserProfile() {
     username: "",
   });
   const [allJobs, setAllJobs] = useState([]);
-  const [job, setJob] = useState({
+  const [job, setJob] = useState<{
+    title: string;
+    salary: string;
+    type: string;
+    date: Date | null;
+  }>({
     title: "",
     salary: "",
     type: "",
+    date: new Date(),
   });
   const [inputField, setInputField] = useState(false);
 
@@ -31,9 +37,17 @@ export default function UserProfile() {
 
   const addJob = async () => {
     try {
-      const { data } = await axios.post("/api/users/job", job);
+      const localDate = new Date();
+      const adjustedDate = new Date(
+        localDate.getTime() - localDate.getTimezoneOffset() * 60000
+      );
+
+      const newJob = { ...job, date: adjustedDate };
+      const { data } = await axios.post("/api/users/job", newJob);
+
       console.log("signup success", data);
-      setJob({ title: "", salary: "", type: "" });
+      setJob({ title: "", salary: "", type: "", date: null });
+
       setInputField((prev) => !prev);
       getJobsDetails();
     } catch (error: unknown) {
@@ -166,7 +180,7 @@ export default function UserProfile() {
               <div className="bg-white p-1 text-black flex justify-center w-[30%] rounded-md">
                 {`${job.date.toString().slice(0, 10)} ${job.date
                   .toString()
-                  .slice(13, 19)}`}
+                  .slice(11, 19)}`}
               </div>
             </div>
           );
