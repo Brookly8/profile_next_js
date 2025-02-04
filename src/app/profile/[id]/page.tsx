@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 
 export default function UserProfile() {
   const router = useRouter();
+  const [input, setInput] = useState("");
   const [userData, setUserData] = useState({
     username: "",
   });
@@ -22,6 +23,7 @@ export default function UserProfile() {
     date: new Date(),
   });
   const [inputField, setInputField] = useState(false);
+  const [filtering, setFiltering] = useState(false);
 
   const getJobsDetails = async () => {
     try {
@@ -33,6 +35,16 @@ export default function UserProfile() {
         toast.error(error.message);
       }
     }
+    setFiltering(false);
+    setInput("");
+  };
+
+  const search = async () => {
+    const filteredJobs = allJobs.filter((job: { title: string }) =>
+      job.title.includes(input)
+    );
+    setAllJobs(filteredJobs);
+    setFiltering((prev) => !prev);
   };
 
   const addJob = async () => {
@@ -106,6 +118,27 @@ export default function UserProfile() {
           >
             Add Job
           </button>
+          <div className="flex gap-8">
+            <button
+              onClick={search}
+              className="border bg-white border-white pt-1 pb-1 pr-3 pl-3 rounded-lg text-black"
+            >
+              Search
+            </button>
+            <input
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Title/Company Name"
+              type="text"
+              value={input}
+              className="p-2 text-black"
+            />
+            <button
+              onClick={getJobsDetails}
+              className={`text-2xl ${filtering ? "flex" : "hidden"}`}
+            >
+              ❌
+            </button>
+          </div>
           <button
             className="border bg-white border-white pt-1 pb-1 pr-3 pl-3 rounded-lg text-black"
             onClick={logOut}
@@ -125,6 +158,7 @@ export default function UserProfile() {
             onChange={(e) => setJob({ ...job, title: e.target.value })}
             className="text-black rounded-md w-[60%]"
             type="text"
+            value={job.title}
           />
         </div>
         <div className="flex flex-col items-center">
@@ -133,6 +167,7 @@ export default function UserProfile() {
             onChange={(e) => setJob({ ...job, salary: e.target.value })}
             className="text-black rounded-md w-[60%]"
             type="text"
+            value={job.salary}
           />
         </div>
         <div className="flex flex-col items-center">
@@ -141,6 +176,7 @@ export default function UserProfile() {
             onChange={(e) => setJob({ ...job, type: e.target.value })}
             className="text-black rounded-md w-[60%]"
             type="text"
+            value={job.type}
           />
         </div>
         <div className="flex justify-center">
@@ -156,7 +192,7 @@ export default function UserProfile() {
         <div className=" w-[30%] flex justify-center text-xl">
           Title/Company Name
         </div>
-        <div className=" w-[30%] flex justify-center text-xl">salary</div>
+        <div className=" w-[30%] flex justify-center text-xl">Salary</div>
         <div className=" w-[30%] flex justify-center text-xl">Type</div>
         <div className=" w-[30%] flex justify-center text-xl">Time</div>
       </div>
@@ -168,19 +204,22 @@ export default function UserProfile() {
         ) => {
           return (
             <div key={index} className="flex justify-around gap-2 mb-3">
-              <div className="bg-white p-1 text-black flex justify-center w-[30%] rounded-md">
+              <div className="bg-white p-1 text-black flex justify-center items-center w-[30%] rounded-md">
                 {job.title}
               </div>
-              <div className="bg-white p-1 text-black flex justify-center w-[30%] rounded-md">
+              <div className="bg-white p-1 text-black flex justify-center items-center w-[30%] rounded-md">
                 {job.salary}
               </div>
-              <div className="bg-white p-1 text-black flex justify-center w-[30%] rounded-md">
+              <div className="bg-white p-1 text-black flex justify-center items-center w-[30%] rounded-md">
                 {job.type}
               </div>
-              <div className="bg-white p-1 text-black flex justify-center w-[30%] rounded-md">
-                {`${job.date.toString().slice(0, 10)} ${job.date
-                  .toString()
-                  .slice(11, 19)}`}
+              <div className="bg-white p-1 text-black flex justify-center items-center w-[30%] rounded-md">
+                {`${job.date.toString().slice(0, 8)} `}
+                <span className="font-bold underline">
+                  {job.date.toString().slice(8, 10)}
+                </span>
+                {`--`}
+                {`${job.date.toString().slice(11, 19)}`}
               </div>
             </div>
           );
