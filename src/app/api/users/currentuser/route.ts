@@ -16,7 +16,10 @@ export async function GET(request: NextRequest) {
     });
   } catch (error: unknown) {
     if (error instanceof Error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      return NextResponse.json(
+        { error: "Session expired. Redirecting to login..." },
+        { status: 401, headers: { Location: "/login" } } // ✅ Send 401 status
+      );
     }
     return NextResponse.json(
       { error: "An unknown error occurred" },

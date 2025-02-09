@@ -5,13 +5,12 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
 export default function Profile() {
-  const [loggedOut, setLoggedOut] = useState(false);
   const router = useRouter();
 
   const logOut = async () => {
     try {
       await axios("./api/users/logout");
-      setLoggedOut(true);
+      router.push("/login");
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.log(error.message);
@@ -21,8 +20,25 @@ export default function Profile() {
   };
 
   useEffect(() => {
-    router.push("/login");
-  }, [loggedOut]);
+    const checkSession = async () => {
+      try {
+        await axios.get("/api/users/currentuser");
+      } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+          if (error.response?.status === 401) {
+            console.warn("Session expired. Redirecting to login...");
+            logOut();
+          }
+        } else if (error instanceof Error) {
+          console.error("Unexpected error:", error.message);
+        } else {
+          console.error("Unknown error occurred");
+        }
+      }
+    };
+
+    checkSession();
+  }, []);
 
   useEffect(() => {
     const getUserDetails = async () => {
@@ -32,7 +48,6 @@ export default function Profile() {
         router.push(`/profile/${data.data._id}`);
       } catch (error: unknown) {
         if (error instanceof Error) {
-          logOut();
           console.log(error.message);
           toast.error(error.message);
         }
