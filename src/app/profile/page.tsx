@@ -10,7 +10,6 @@ export default function Profile() {
   const logOut = async () => {
     try {
       await axios("./api/users/logout");
-      router.push("/login");
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.log(error.message);
@@ -18,6 +17,10 @@ export default function Profile() {
       }
     }
   };
+
+  useEffect(()=>{
+    router.push("/login")
+  },[logOut])
 
   useEffect(() => {
     const getUserDetails = async () => {
