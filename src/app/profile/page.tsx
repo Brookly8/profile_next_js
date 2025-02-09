@@ -1,15 +1,18 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import Login from "../login/page";
 
 export default function Profile() {
   const router = useRouter();
+  const [login, setLogin] = useState(false);
 
   const logOut = async () => {
     try {
       await axios("./api/users/logout");
+      setLogin(true);
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.log(error.message);
@@ -26,8 +29,7 @@ export default function Profile() {
         if (axios.isAxiosError(error)) {
           if (error.response?.status === 401) {
             console.warn("Session expired. Redirecting to login...");
-            await logOut();
-            router.push("/login");
+            logOut();
           }
         } else if (error instanceof Error) {
           console.error("Unexpected error:", error.message);
@@ -56,5 +58,5 @@ export default function Profile() {
     getUserDetails();
   }, []);
 
-  return <div></div>;
+  return login ? <Login /> : <div></div>;
 }
