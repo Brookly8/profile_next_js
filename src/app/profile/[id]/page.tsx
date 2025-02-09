@@ -31,10 +31,12 @@ export default function UserProfile() {
     try {
       const { data } = await axios("/api/users/alljobs");
 
-      const formattedJobs = data.jobs.map((job: any) => ({
-        ...job,
-        date: job.date ? new Date(job.date) : null, // Ensure valid Date object
-      }));
+      const formattedJobs = data.jobs.map(
+        (job: { title: string; salary: string; type: string; date: Date }) => ({
+          ...job,
+          date: job.date ? new Date(job.date) : null,
+        })
+      );
 
       setAllJobs(formattedJobs.reverse());
     } catch (error: unknown) {
