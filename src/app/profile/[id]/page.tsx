@@ -10,7 +10,9 @@ export default function UserProfile() {
   const [userData, setUserData] = useState({
     username: "",
   });
-  const [allJobs, setAllJobs] = useState([]);
+  const [allJobs, setAllJobs] = useState<
+    { title: string; salary: string; type: string; date: Date | null }[]
+  >([]);
   const [job, setJob] = useState<{
     title: string;
     salary: string;
@@ -28,7 +30,13 @@ export default function UserProfile() {
   const getJobsDetails = async () => {
     try {
       const { data } = await axios("/api/users/alljobs");
-      setAllJobs(data.jobs);
+
+      const formattedJobs = data.jobs.map((job: any) => ({
+        ...job,
+        date: job.date ? new Date(job.date) : null, // Ensure valid Date object
+      }));
+
+      setAllJobs(formattedJobs.reverse());
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.log(error.message);
@@ -37,6 +45,13 @@ export default function UserProfile() {
     }
     setFiltering(false);
     setInput("");
+  };
+
+  const countForDay = (day: string) => {
+    const res = allJobs.filter(
+      (job) => job.date && job.date.toISOString().slice(8, 10) === day
+    );
+    return res.length;
   };
 
   const search = async () => {
@@ -103,60 +118,65 @@ export default function UserProfile() {
   };
 
   return (
-    <div className="min-h-screen">
-      <div className="flex bg-slate-800 p-4 rounded-lg mb-5 items-center">
-        <div className="flex gap-4 items-center w-[100%] justify-between">
-          <p>
-            Welcome Back{" "}
-            <span className="bg-orange-400 pt-2 pb-2 pr-3 pl-3 rounded-lg text-black">
-              {userData.username}
-            </span>
-          </p>
+    <div className="min-h-screen p-4">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row bg-slate-800 p-4 rounded-lg mb-5 items-center justify-between">
+        <p className="hidden text-center md:text-left md:block">
+          Welcome Back{" "}
+          <span className="bg-orange-400 p-2 rounded-lg text-black">
+            {userData.username}
+          </span>
+        </p>
+        <div className="flex flex-wrap gap-4 justify-center md:justify-end w-full md:w-auto">
           <button
             onClick={() => setInputField((prev) => !prev)}
-            className="border bg-white border-white pt-1 pb-1 pr-3 pl-3 rounded-lg text-black"
+            className="border bg-white border-white py-2 px-4 rounded-lg text-black"
           >
             Add Job
           </button>
-          <div className="flex gap-8">
-            <button
-              onClick={search}
-              className="border bg-white border-white pt-1 pb-1 pr-3 pl-3 rounded-lg text-black"
-            >
-              Search
-            </button>
-            <input
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Title/Company Name"
-              type="text"
-              value={input}
-              className="p-2 text-black"
-            />
-            <button
-              onClick={getJobsDetails}
-              className={`text-2xl ${filtering ? "flex" : "hidden"}`}
-            >
-              ❌
-            </button>
-          </div>
           <button
-            className="border bg-white border-white pt-1 pb-1 pr-3 pl-3 rounded-lg text-black"
+            onClick={search}
+            className="border bg-white border-white py-2 px-4 rounded-lg text-black"
+          >
+            Search
+          </button>
+          <input
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Title/Company Name"
+            type="text"
+            value={input}
+            className="p-2 text-black w-full md:w-auto"
+          />
+          <button
+            onClick={getJobsDetails}
+            className={`text-2xl ${
+              filtering ? "flex justify-center items-center" : "hidden"
+            }`}
+          >
+            ❌
+          </button>
+          <button
+            className="border bg-white border-white py-2 px-4 rounded-lg text-black"
             onClick={logOut}
           >
             LogOut
           </button>
         </div>
       </div>
+
+      {/* Job Form */}
       <div
-        className={`bg-slate-300 rounded-md flex-col p-4 gap-8 ${
-          inputField ? "flex absolute w-[60%] left-[20%] top-[30%]" : "hidden"
+        className={`bg-slate-300 rounded-md flex-col p-4 gap-4 ${
+          inputField
+            ? "flex absolute w-[90%] md:w-[60%] left-[5%] md:left-[20%] top-[30%]"
+            : "hidden"
         }`}
       >
         <div className="flex flex-col items-center">
           <span className="text-black">Job Title:</span>
           <input
             onChange={(e) => setJob({ ...job, title: e.target.value })}
-            className="text-black rounded-md w-[60%]"
+            className="text-black rounded-md w-[90%] md:w-[60%] p-2"
             type="text"
             value={job.title}
           />
@@ -165,7 +185,7 @@ export default function UserProfile() {
           <span className="text-black">Salary:</span>
           <input
             onChange={(e) => setJob({ ...job, salary: e.target.value })}
-            className="text-black rounded-md w-[60%]"
+            className="text-black rounded-md w-[90%] md:w-[60%] p-2"
             type="text"
             value={job.salary}
           />
@@ -174,7 +194,7 @@ export default function UserProfile() {
           <span className="text-black">Type:</span>
           <input
             onChange={(e) => setJob({ ...job, type: e.target.value })}
-            className="text-black rounded-md w-[60%]"
+            className="text-black rounded-md w-[90%] md:w-[60%] p-2"
             type="text"
             value={job.type}
           />
@@ -182,49 +202,62 @@ export default function UserProfile() {
         <div className="flex justify-center">
           <button
             onClick={addJob}
-            className=" bg-black border-white pt-1 pb-1 pr-3 pl-3 rounded-lg text-white w-[20%]"
+            className="bg-black border-white py-2 px-4 rounded-lg text-white w-[50%] md:w-[20%]"
           >
             Submit
           </button>
         </div>
       </div>
-      <div className="flex justify-around gap-2 mb-5 mt-5">
-        <div className=" w-[30%] flex justify-center text-xl">
+
+      {/* Job Table Header */}
+      <div className="hidden md:flex justify-around gap-2 mb-5 mt-5">
+        <div className="w-[30%] flex justify-center text-xl">
           Title/Company Name
         </div>
-        <div className=" w-[30%] flex justify-center text-xl">Salary</div>
-        <div className=" w-[30%] flex justify-center text-xl">Type</div>
-        <div className=" w-[30%] flex justify-center text-xl">Time</div>
+        <div className="w-[30%] flex justify-center text-xl">Salary</div>
+        <div className="w-[30%] flex justify-center text-xl">Type</div>
+        <div className="w-[30%] flex justify-center text-xl">Time</div>
       </div>
 
-      {allJobs.map(
-        (
-          job: { title: string; salary: string; type: string; date: Date },
-          index
-        ) => {
-          return (
-            <div key={index} className="flex justify-around gap-2 mb-3">
-              <div className="bg-white p-1 text-black flex justify-center items-center w-[30%] rounded-md">
+      {/* Job List */}
+      {allJobs.map((job, index) => {
+        return (
+          <div key={index} className="border-b py-4">
+            {/* Date & Total Count */}
+            {job.date &&
+              job.date.toISOString().slice(0, 10) !==
+                allJobs[index - 1]?.date?.toISOString().slice(0, 10) && (
+                <div className="font-bold underline mb-2 text-lg text-center md:text-left">
+                  {job.date.toISOString().slice(0, 10)}
+                  <p className="text-sm">
+                    Total Applications:{" "}
+                    <span className="font-bold">
+                      {countForDay(job.date.toISOString().slice(8, 10))}
+                    </span>
+                  </p>
+                </div>
+              )}
+
+            {/* Job Details */}
+            <div className="flex flex-col md:flex-row justify-around gap-2 mb-3 p-2 bg-white rounded-md">
+              <div className="p-2 text-black flex justify-center items-center w-full md:w-[30%] rounded-md text-sm md:text-base">
                 {job.title}
               </div>
-              <div className="bg-white p-1 text-black flex justify-center items-center w-[30%] rounded-md">
+              <div className="p-2 text-black flex justify-center items-center w-full md:w-[30%] rounded-md text-sm md:text-base">
                 {job.salary}
               </div>
-              <div className="bg-white p-1 text-black flex justify-center items-center w-[30%] rounded-md">
+              <div className="p-2 text-black flex justify-center items-center w-full md:w-[30%] rounded-md text-sm md:text-base">
                 {job.type}
               </div>
-              <div className="bg-white p-1 text-black flex justify-center items-center w-[30%] rounded-md">
-                {`${job.date.toString().slice(0, 8)} `}
-                <span className="font-bold underline">
-                  {job.date.toString().slice(8, 10)}
-                </span>
-                {`--`}
-                {`${job.date.toString().slice(11, 19)}`}
+              <div className="p-2 text-black flex justify-center items-center w-full md:w-[30%] rounded-md text-sm md:text-base">
+                {`${job.date?.toISOString().slice(0, 10)} - ${job.date
+                  ?.toISOString()
+                  .slice(11, 19)}`}
               </div>
             </div>
-          );
-        }
-      )}
+          </div>
+        );
+      })}
     </div>
   );
 }
