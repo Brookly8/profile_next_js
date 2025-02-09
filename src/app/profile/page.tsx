@@ -26,7 +26,7 @@ export default function Profile() {
         if (axios.isAxiosError(error)) {
           if (error.response?.status === 401) {
             console.warn("Session expired. Redirecting to login...");
-            logOut();
+            await logOut();
             router.push("/login");
           }
         } else if (error instanceof Error) {
