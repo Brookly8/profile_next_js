@@ -1,15 +1,17 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
 export default function Profile() {
+  const [loggedOut, setLoggedOut] = useState(false);
   const router = useRouter();
 
   const logOut = async () => {
     try {
       await axios("./api/users/logout");
+      setLoggedOut(true);
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.log(error.message);
@@ -18,9 +20,9 @@ export default function Profile() {
     }
   };
 
-  useEffect(()=>{
-    router.push("/login")
-  },[logOut])
+  useEffect(() => {
+    router.push("/login");
+  }, [loggedOut]);
 
   useEffect(() => {
     const getUserDetails = async () => {
