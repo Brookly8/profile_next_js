@@ -10,7 +10,6 @@ export default function Profile() {
   const logOut = async () => {
     try {
       await axios("./api/users/logout");
-      router.push("/login");
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.log(error.message);
@@ -28,6 +27,7 @@ export default function Profile() {
           if (error.response?.status === 401) {
             console.warn("Session expired. Redirecting to login...");
             logOut();
+            router.push("/login");
           }
         } else if (error instanceof Error) {
           console.error("Unexpected error:", error.message);
