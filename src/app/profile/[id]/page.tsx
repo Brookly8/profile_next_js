@@ -51,7 +51,7 @@ export default function UserProfile() {
 
   const countForDay = (day: string) => {
     const res = allJobs.filter(
-      (job) => job.date && job.date.toISOString().slice(8, 10) === day
+      (job) => job.date && job.date.toISOString().slice(0, 10) === day
     );
     return res.length;
   };
@@ -122,7 +122,10 @@ export default function UserProfile() {
   return (
     <div className="min-h-screen p-4">
       {/* Header */}
-      <div className="flex flex-col md:flex-row bg-slate-800 p-4 rounded-lg mb-5 items-center justify-between">
+      <div
+        className="fixed w-[85.5%] flex flex-col md:flex-row md:w-[95%] lg:w-[96%]
+       bg-slate-800 p-4 rounded-lg mb-1 items-center justify-between"
+      >
         <p className="hidden text-center md:text-left md:block">
           Welcome Back{" "}
           <span className="bg-orange-400 p-2 rounded-lg text-black">
@@ -212,54 +215,60 @@ export default function UserProfile() {
       </div>
 
       {/* Job Table Header */}
-      <div className="hidden md:flex justify-around gap-2 mb-5 mt-5">
-        <div className="w-[30%] flex justify-center text-xl">
+      <div className="hidden md:flex justify-around  mb-5 mt-[12%] lg:mt-[8%]">
+        <div className="w-[30%] flex justify-center text-xl border-r border-white">
           Title/Company Name
         </div>
-        <div className="w-[30%] flex justify-center text-xl">Salary</div>
-        <div className="w-[30%] flex justify-center text-xl">Type</div>
+        <div className="w-[30%] flex justify-center text-xl border-r border-white">
+          Salary
+        </div>
+        <div className="w-[30%] flex justify-center text-xl border-r border-white">
+          Type
+        </div>
         <div className="w-[30%] flex justify-center text-xl">Time</div>
       </div>
 
       {/* Job List */}
-      {allJobs.map((job, index) => {
-        return (
-          <div key={index} className="border-b py-4">
-            {/* Date & Total Count */}
-            {job.date &&
-              job.date.toISOString().slice(0, 10) !==
-                allJobs[index - 1]?.date?.toISOString().slice(0, 10) && (
-                <div className="font-bold underline mb-2 text-lg text-center md:text-left">
-                  {job.date.toISOString().slice(0, 10)}
-                  <p className="text-sm">
-                    Total Applications:{" "}
-                    <span className="font-bold">
-                      {countForDay(job.date.toISOString().slice(8, 10))}
-                    </span>
-                  </p>
-                </div>
-              )}
+      <div className="mt-[200px] md:mt-0">
+        {allJobs.map((job, index) => {
+          return (
+            <div key={index} className="border-b py-4">
+              {/* Date & Total Count */}
+              {job.date &&
+                job.date.toISOString().slice(0, 10) !==
+                  allJobs[index - 1]?.date?.toISOString().slice(0, 10) && (
+                  <div className="font-bold underline mb-2 text-lg text-center md:text-left">
+                    {job.date.toISOString().slice(0, 10)}
+                    <p className="text-sm">
+                      Total Applications:{" "}
+                      <span className="font-bold">
+                        {countForDay(job.date.toISOString().slice(0, 10))}
+                      </span>
+                    </p>
+                  </div>
+                )}
 
-            {/* Job Details */}
-            <div className="flex flex-col md:flex-row justify-around gap-2 mb-3 p-2 bg-white rounded-md">
-              <div className="p-2 text-black flex justify-center items-center w-full md:w-[30%] rounded-md text-sm md:text-base">
-                {job.title}
-              </div>
-              <div className="p-2 text-black flex justify-center items-center w-full md:w-[30%] rounded-md text-sm md:text-base">
-                {job.salary}
-              </div>
-              <div className="p-2 text-black flex justify-center items-center w-full md:w-[30%] rounded-md text-sm md:text-base">
-                {job.type}
-              </div>
-              <div className="p-2 text-black flex justify-center items-center w-full md:w-[30%] rounded-md text-sm md:text-base">
-                {`${job.date?.toISOString().slice(0, 10)} - ${job.date
-                  ?.toISOString()
-                  .slice(11, 19)}`}
+              {/* Job Details */}
+              <div className="flex flex-col md:flex-row justify-around gap-2 mb-3 p-2 bg-white rounded-md">
+                <div className="p-2 text-black flex justify-center items-center w-full md:w-[30%] text-sm md:text-base md:border-r md:border-black">
+                  {job.title}
+                </div>
+                <div className="p-2 text-black flex justify-center items-center w-full md:w-[30%]  text-sm md:text-base md:border-x md:border-black">
+                  {job.salary}
+                </div>
+                <div className="p-2 text-black flex justify-center items-center w-full md:w-[30%]  text-sm md:text-base md:border-x md:border-black">
+                  {job.type}
+                </div>
+                <div className="p-2 text-black flex justify-center items-center w-full md:w-[30%]  text-sm md:text-base md:border-l md:border-black">
+                  {`${job.date?.toISOString().slice(0, 10)} - ${job.date
+                    ?.toISOString()
+                    .slice(11, 19)}`}
+                </div>
               </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 }
